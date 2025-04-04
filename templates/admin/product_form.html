@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if product else 'Add' }} Product - EMPORIUM{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <a href="{{ url_for('admin_products') }}" class="btn btn-outline-dark me-3">
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                        <h2 class="mb-0">{{ 'Edit' if product else 'Add' }} Product</h2>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label for="name" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="{{ product['name'] if product else '' }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a product name.
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required>{{ product['description'] if product else '' }}</textarea>
+                            <div class="invalid-feedback">
+                                Please provide a product description.
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="price" class="form-label">Price (£)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">£</span>
+                                    <input type="number" class="form-control" id="price" name="price" 
+                                           value="{{ product['price'] if product else '' }}" step="0.01" required>
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please provide a valid price.
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="stock" class="form-label">Stock</label>
+                                <input type="number" class="form-control" id="stock" name="stock" 
+                                       value="{{ product['stock'] if product else '0' }}" required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid stock quantity.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select a category</option>
+                                <option value="fashion" {% if product and product['category'] == 'fashion' %}selected{% endif %}>Fashion</option>
+                                <option value="home" {% if product and product['category'] == 'home' %}selected{% endif %}>Home</option>
+                                <option value="beauty" {% if product and product['category'] == 'beauty' %}selected{% endif %}>Beauty</option>
+                                <option value="technology" {% if product and product['category'] == 'technology' %}selected{% endif %}>Technology</option>
+                                <option value="kitchen" {% if product and product['category'] == 'kitchen' %}selected{% endif %}>Kitchen</option>
+                                <option value="books" {% if product and product['category'] == 'books' %}selected{% endif %}>Books</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select a category.
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="image" class="form-label">Product Image</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*" {% if not product %}required{% endif %}>
+                            <div class="form-text">Upload a high-quality image (recommended size: 800x800px)</div>
+                            {% if product and product['image_url'] %}
+                            <div class="mt-2">
+                                <img src="{{ product['image_url'] }}" alt="Current product image" class="img-thumbnail" style="max-height: 200px;">
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-dark">
+                                {{ 'Update' if product else 'Add' }} Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
+</script>
+{% endblock %} 

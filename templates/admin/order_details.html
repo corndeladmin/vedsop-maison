@@ -1,0 +1,111 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Order Details</h2>
+    <div>
+        {% if order['status'] != 'refunded' %}
+        <button type="button" class="btn btn-danger me-2" onclick="refundOrder({{ order['id'] }})">
+            <i class="bi bi-arrow-counterclockwise"></i> Refund Order
+        </button>
+        {% endif %}
+        <a href="{{ url_for('admin_orders') }}" class="btn admin-btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+</div>
+
+<div class="admin-card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Order Information</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Order ID:</strong> #{{ order['id'] }}</p>
+                <p><strong>Customer:</strong> {{ order['username'] }}</p>
+                <p><strong>Date:</strong> {{ order['created_at'] }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Total Amount:</strong> £{{ "%.2f"|format(order['total_amount']) }}</p>
+                <p><strong>Status:</strong> 
+                    <span class="badge {% if order['status'] == 'completed' %}badge-completed{% elif order['status'] == 'pending' %}badge-pending{% elif order['status'] == 'cancelled' %}badge-cancelled{% elif order['status'] == 'refunded' %}badge-refunded{% else %}bg-secondary{% endif %}">
+                        {{ order['status']|title }}
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="admin-card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Shipping Information</h5>
+        <p><strong>Name:</strong> {{ order['shipping_name'] }}</p>
+        <p><strong>Email:</strong> {{ order['shipping_email'] }}</p>
+        <p><strong>Address:</strong> {{ order['shipping_address'] }}</p>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="card-body">
+        <h5 class="card-title">Order Items</h5>
+        <div class="table-responsive">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                {% if item['image_url'] %}
+                                <img src="{{ item['image_url'] }}" alt="{{ item['name'] }}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                {% endif %}
+                                {{ item['name'] }}
+                            </div>
+                        </td>
+                        <td>£{{ "%.2f"|format(item['price']) }}</td>
+                        <td>{{ item['quantity'] }}</td>
+                        <td>£{{ "%.2f"|format(item['price'] * item['quantity']) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                        <td><strong>£{{ "%.2f"|format(order['total_amount']) }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+/* eslint-disable */
+function refundOrder(orderId) {
+    if (confirm('Are you sure you want to refund this order?')) {
+        fetch(`/orders/${orderId}/refund`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Failed to refund order');
+            }
+        });
+    }
+}
+/* eslint-enable */
+</script>
+{% endblock %} 

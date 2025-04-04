@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category|title }} - Vedsop Maison{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">{{ category|title }}</h1>
+    
+    <div class="row">
+        {% if products %}
+            {% for product in products %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 product-card">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}" class="text-decoration-none">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="card-img-top product-image-placeholder d-flex align-items-center justify-content-center">
+                            <span class="text-muted">No image</span>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-primary fw-bold">£{{ "%.2f"|format(product.price) }}</p>
+                            <p class="card-text small text-truncate">{{ product.description }}</p>
+                        </div>
+                    </a>
+                    <div class="card-footer bg-transparent">
+                        <form action="{{ url_for('add_to_cart_route', product_id=product.id) }}" method="post">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No products found in this category.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.product-image {
+    height: 200px;
+    object-fit: contain;
+    padding: 1rem;
+}
+.product-image-placeholder {
+    height: 200px;
+    background-color: #f8f9fa;
+}
+.product-card {
+    transition: transform 0.3s;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %} 

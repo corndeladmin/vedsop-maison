@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - EMPORIUM{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="text-center">Your Shopping Cart</h1>
+        </div>
+    </div>
+
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if item['image_url'] %}
+                                    <img src="{{ item['image_url'] }}" alt="{{ item['name'] }}" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-right: 1rem;">
+                                    {% endif %}
+                                    <div>
+                                        <h5 class="mb-0">{{ item['name'] }}</h5>
+                                        <p class="text-muted mb-0">{{ item['description'] }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>£{{ "%.2f"|format(item['price']) }}</td>
+                            <td>
+                                <form action="{{ url_for('update_cart', item_id=item['id']) }}" method="POST" class="d-flex align-items-center">
+                                    <input type="number" name="quantity" value="{{ item['quantity'] }}" min="1" class="form-control" style="width: 80px;">
+                                    <button type="submit" name="action" value="update" class="btn btn-link">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>£{{ "%.2f"|format(item['price'] * item['quantity']) }}</td>
+                            <td>
+                                <form action="{{ url_for('update_cart', item_id=item['id']) }}" method="POST">
+                                    <button type="submit" name="action" value="remove" class="btn btn-link text-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                            <td><strong>£{{ "%.2f"|format(total) }}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary me-2">
+                <i class="bi bi-arrow-left"></i> Continue Shopping
+            </a>
+            <a href="{{ url_for('checkout') }}" class="btn btn-primary">
+                Proceed to Checkout <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center">
+            <div class="alert alert-info">
+                <i class="bi bi-cart-x"></i> Your cart is empty
+            </div>
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Continue Shopping
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

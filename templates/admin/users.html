@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">User Management</h2>
+</div>
+
+<div class="admin-card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Admin</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user['id'] }}</td>
+                        <td>{{ user['username'] }}</td>
+                        <td>
+                            <span class="badge {% if user['is_admin'] %}badge-completed{% else %}bg-secondary{% endif %}">
+                                {{ 'Yes' if user['is_admin'] else 'No' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm {% if user['is_admin'] %}btn-danger{% else %}btn-success{% endif %}"
+                                        onclick="toggleAdmin({{ user['id'] }}, {{ 'false' if user['is_admin'] else 'true' }})">
+                                    <i class="bi bi-{{ 'shield-x' if user['is_admin'] else 'shield-check' }}"></i>
+                                    {{ 'Remove Admin' if user['is_admin'] else 'Make Admin' }}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleAdmin(userId, makeAdmin) {
+    if (confirm(`Are you sure you want to ${makeAdmin ? 'make' : 'remove'} this user an admin?`)) {
+        fetch(`/admin/users/${userId}/toggle-admin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ make_admin: makeAdmin })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to update user status');
+            }
+        });
+    }
+}
+</script>
+{% endblock %} 

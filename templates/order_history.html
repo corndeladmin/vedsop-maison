@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Order History - EMPORIUM{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Order History</h1>
+        <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left"></i> Back to Store
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{{ url_for('order_history') }}" method="get" class="d-flex">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search orders by product..." value="{{ search }}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i> Search
+                    </button>
+                </div>
+                {% if search %}
+                <a href="{{ url_for('order_history') }}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Products</th>
+                    <th>Shipping To</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('order_details', order_id=order['id']) }}" class="text-decoration-none">
+                            #{{ order['id'] }}
+                        </a>
+                    </td>
+                    <td>{{ order['created_at'] }}</td>
+                    <td>{{ order['product_names'] }}</td>
+                    <td>
+                        <strong>{{ order['shipping_name'] }}</strong><br>
+                        {{ order['shipping_email'] }}<br>
+                        {{ order['shipping_address']|replace('\n', '<br>')|safe }}
+                    </td>
+                    <td>£{{ "%.2f"|format(order['total_amount']) }}</td>
+                    <td>
+                        <span class="badge {% if order['status'] == 'completed' %}bg-success{% elif order['status'] == 'pending' %}bg-warning text-dark{% elif order['status'] == 'cancelled' %}bg-danger{% elif order['status'] == 'refunded' %}bg-secondary{% else %}bg-secondary{% endif %}">
+                            {{ order['status']|title }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('order_details', order_id=order['id']) }}" class="btn btn-sm btn-outline-primary mb-1">
+                            <i class="bi bi-eye"></i> View Details
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-danger refund-btn {% if order['status'] == 'refunded' or (now - order['created_at']).days >= 14 %}d-none{% endif %}" onclick="refundOrder({{ order['id'] }})">
+                            <i class="bi bi-arrow-counterclockwise"></i> Refund
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% elif search %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No orders found matching your search criteria. <a href="{{ url_for('order_history') }}">Clear search</a>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> You haven't placed any orders yet.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+/* eslint-disable */
+function refundOrder(orderId) {
+    if (confirm('Are you sure you want to refund this order?')) {
+        fetch(`/orders/${orderId}/refund`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Failed to refund order');
+            }
+        });
+    }
+}
+/* eslint-enable */
+</script>
+{% endblock %} 

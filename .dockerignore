@@ -1,0 +1,42 @@
+# Git files
+.git
+.gitignore
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database file (we'll mount it as a volume)
+store.db
+
+# Uploaded files (we'll mount as volume)
+static/uploads/
+
+# Docker files
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo

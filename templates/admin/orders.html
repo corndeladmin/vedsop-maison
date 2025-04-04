@@ -1,0 +1,96 @@
+{% extends "admin/base.html" %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Order Management</h2>
+</div>
+
+<div class="admin-card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table admin-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Shipping Address</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>#{{ order['id'] }}</td>
+                        <td>{{ order['username'] }}</td>
+                        <td>{{ order['created_at'] }}</td>
+                        <td>£{{ "%.2f"|format(order['total_amount']) }}</td>
+                        <td>
+                            <span class="badge {% if order['status'] == 'completed' %}badge-completed{% elif order['status'] == 'pending' %}badge-pending{% elif order['status'] == 'cancelled' %}badge-cancelled{% else %}bg-secondary{% endif %}">
+                                {{ order['status']|title }}
+                            </span>
+                        </td>
+                        <td>{{ order['shipping_address'] }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('admin_order_details', order_id=order['id']) }}" class="btn btn-sm admin-btn-secondary">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                                {% if order['status'] != 'refunded' %}
+                                <button type="button" class="btn btn-sm btn-danger" onclick="refundOrder({{ order['id'] }})">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Refund
+                                </button>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="order-items-row">
+                        <td colspan="7" class="border-0 pt-0">
+                            <div class="ps-4 text-muted">
+                                <small>
+                                    <i class="bi bi-box me-2"></i>
+                                    {% for item in order['items'] %}
+                                        {{ item['quantity'] }}x {{ item['name'] }}{% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </small>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.order-items-row:hover {
+    background-color: transparent !important;
+}
+</style>
+
+<script>
+/* eslint-disable */
+function refundOrder(orderId) {
+    if (confirm('Are you sure you want to refund this order?')) {
+        fetch(`/orders/${orderId}/refund`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || 'Failed to refund order');
+            }
+        });
+    }
+}
+/* eslint-enable */
+</script>
+{% endblock %} 

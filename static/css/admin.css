@@ -1,0 +1,257 @@
+/* Admin Content Styles */
+.admin-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.admin-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+.admin-card .card-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1.25rem 1.5rem;
+}
+
+.admin-card .card-title {
+    color: #1a1a1a;
+    font-weight: 600;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.admin-table th {
+    background: #fafafa;
+    padding: 1rem;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: #333;
+}
+
+.admin-table tr:hover {
+    background-color: #fafafa;
+}
+
+/* Status Badges */
+.badge-completed {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-cancelled {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-refunded {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Statistics Cards */
+.admin-stats-card {
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    border-radius: 16px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.admin-stats-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.admin-stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    z-index: 1;
+}
+
+.admin-stats-card .stats-icon {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 3rem;
+    opacity: 0.2;
+    z-index: 1;
+}
+
+.admin-stats-card h3 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.admin-stats-card p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Gradient Backgrounds for Stats Cards */
+.admin-stats-card.orders {
+    background: linear-gradient(135deg, #2c3e50 0%, #4a6b8a 100%);
+}
+
+.admin-stats-card.revenue {
+    background: linear-gradient(135deg, #27ae60 0%, #3cc76a 100%);
+}
+
+.admin-stats-card.users {
+    background: linear-gradient(135deg, #8e44ad 0%, #a55cc4 100%);
+}
+
+/* Badges */
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.badge-pending {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.badge-completed {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.badge-cancelled {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+/* Buttons */
+.btn-admin {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.btn-admin-primary {
+    background-color: #2c3e50;
+    color: #fff;
+    border: none;
+}
+
+.btn-admin-primary:hover {
+    background-color: #34495e;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-admin-secondary {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.btn-admin-secondary:hover {
+    background-color: #e9ecef;
+    color: #2c3e50;
+    transform: translateY(-1px);
+}
+
+/* Form Styles */
+.form-control-admin {
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control-admin:focus {
+    border-color: #2c3e50;
+    box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.1);
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Admin Buttons */
+.admin-btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.admin-btn-secondary:hover {
+    background-color: #5a6268;
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .admin-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .admin-stats-card {
+        margin-bottom: 1.5rem;
+        padding: 1.5rem;
+    }
+    
+    .admin-stats-card h3 {
+        font-size: 2rem;
+    }
+    
+    .btn-admin {
+        width: 100%;
+        margin-bottom: 0.75rem;
+    }
+} 
